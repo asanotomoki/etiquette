@@ -23,6 +23,7 @@ export const CardList: React.FC<CardListProps> = (props) => {
 		"alignItems": "center"
 	}
 	const pushUsed = (id: number) => {
+		if (CheckWinner(cardlist, user)) return;
 		if (prevNumber < id && nextPlayer === user && cardlist[id - 1] === false) {
 			cardlist[id - 1] = true;
 			ChangePlayer(user);
@@ -40,7 +41,12 @@ export const CardList: React.FC<CardListProps> = (props) => {
 		}
 	}
 
-	const color = user === "A" ? "aqua" : "pink";
+	const getColor = (user: string, id:number, used:boolean) => {
+		if (used) return "#505050";
+		if (nextPlayer !== user) return (user === "A" ? "#7fafaf" : "#aF8F8F");
+		if (prevNumber >= id) return (user === "A" ? "#7fafaf" : "#aF8F8F");
+		return (user === "A" ? "aqua" : "pink");
+	}
 	return (
 		<div>
 			<p><strong>Player {user} </strong></p>
@@ -50,7 +56,7 @@ export const CardList: React.FC<CardListProps> = (props) => {
 						cardlist.map((card, index) => {
 							return (
 								<li key={index}>
-									<Card number={index + 1} color={card ? "gray" : color} pushUsed={pushUsed} />
+									<Card number={index + 1} color={getColor(user, index+1, card)} pushUsed={pushUsed} />
 								</li>
 							)
 						})

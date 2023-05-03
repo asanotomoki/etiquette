@@ -5,7 +5,7 @@ type CardProps = {
 	color: string;
 	pushUsed: (id: number) => void;
 }
-const Card: React.FC<CardProps> = (props) => {
+const  Card: React.FC<CardProps> = React.memo(props => {
 	const { number, color, pushUsed } = props;
 	const style = {
 		"width": "30px",
@@ -21,6 +21,6 @@ const Card: React.FC<CardProps> = (props) => {
 			<p>{number}</p>
 		</button>
 	)
-}
+}, )
 
 export default Card;
