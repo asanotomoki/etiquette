@@ -1,61 +1,59 @@
 import React from 'react';
 import { useState } from 'react';
 import Card from "./Card"
-import { isPropertySignature } from 'typescript';
 
 
-type CardListProps = {
+export interface CardListProps {
 	user: string,
 	nextPlayer: string,
 	ChangePlayer: (user: string) => void,
-	// CheckWinner
-	CheckWinner: (playerCard: number[], user: string) => boolean,
+	CheckWinner: (playerCard: boolean[], user: string) => boolean,
 	setPrevNumber: (id: number) => void,
 	prevNumber: number,
+	pushLog: (playerlog: number) => void,
 }
-const CardList: React.FC<CardListProps> = (props) => {
+
+export const CardList: React.FC<CardListProps> = (props) => {
 	// CheckWinner
-	const { user, nextPlayer, ChangePlayer, CheckWinner, setPrevNumber, prevNumber } = props;
-	const [cardlist, setCardList] = useState<number[]>([1, 2, 3, 4, 5]);
-	const [usedArray, setUsedArray] = useState<number[]>([]);
+	const { user, nextPlayer, ChangePlayer, CheckWinner, setPrevNumber, prevNumber, pushLog } = props;
+	const [cardlist] = useState<boolean[]>(Array(5).fill(false));
 	const style = {
 		"display": "flex",
 		"justifyContent": "left",
 		"alignItems": "center"
 	}
 	const pushUsed = (id: number) => {
-		console.log (prevNumber);
-		if (prevNumber < id && nextPlayer === user) {
-			const tmpCardList = cardlist.filter(Card => Card !== id);
-			setCardList(tmpCardList);
-			setUsedArray([...usedArray, id]);
+		if (prevNumber < id && nextPlayer === user && cardlist[id - 1] === false) {
+			cardlist[id - 1] = true;
 			ChangePlayer(user);
-			CheckWinner(tmpCardList, user);
+			CheckWinner(cardlist, user);
 			setPrevNumber(id);
+			pushLog(id);
 		}
 	}
 
 	const pass = () => {
-		ChangePlayer(user);
-		setPrevNumber(0);
+		if (!CheckWinner(cardlist, user) && nextPlayer === user) {
+			ChangePlayer(user);
+			pushLog(-1);
+			setPrevNumber(0);
+		}
 	}
+
 	const color = user === "A" ? "aqua" : "pink";
 	return (
 		<div>
 			<p><strong>Player {user} </strong></p>
-			<p>Player Card</p>
 			<div className='cards'>
 				<div style={style}>
 					{
-						cardlist.map(card =>
-							<Card number={card} color={color} pushUsed={pushUsed} />)
-					}
-				</div>
-				<p>Used Card</p>
-				<div>
-					{
-						usedArray.map(card =>
-							<Card number={card} color='gray' pushUsed={() => { }} />)
+						cardlist.map((card, index) => {
+							return (
+								<li key={index}>
+									<Card number={index + 1} color={card ? "gray" : color} pushUsed={pushUsed} />
+								</li>
+							)
+						})
 					}
 				</div>
 			</div>
@@ -63,5 +61,3 @@ const CardList: React.FC<CardListProps> = (props) => {
 		</div>
 	)
 }
-
-export default CardList;
