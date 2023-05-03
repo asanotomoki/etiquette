@@ -1,18 +1,15 @@
 import React from 'react';
-import { useState } from 'react';
+//import { useState } from 'react';
 import './index.css'
+// カードコンポーネントの作成
+// カードの表示 -> mapで配列を回す
+// プレイヤーのカードの状態管理
+// カードをクリックしたら、カードの状態を変更する
 
 const App:React.FC = () => {
-  const [count, setCount] = useState(0);
-
-  const HandleClick = () => {
-    setCount(count + 1);
-  }
   return (
     <div className="App">
       <h1>エチケット ゲーム</h1>
-      <p>{count}</p>
-      <button onClick={HandleClick}>count</button>
     </div>
   );
 }
