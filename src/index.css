@@ -5,3 +5,13 @@ html {
 body {
   margin: 1%;
 }
+
+p {
+  margin: 0;
+}
+
+.cards {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
